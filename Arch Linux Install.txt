@@ -1,0 +1,95 @@
+Arch Linux Install
+
+ping -c 3 google.com
+
+fdisk -l
+cfdisk /dev/sdx
+	dos
+	5G bootable 
+	2G swap
+	* Normal
+	Write
+	Quit
+
+mkfs.ext4 /dev/sdx1
+mkfs.ext4 /dev/sdx3
+
+mkswap /dev/sdx2
+swapon /dev/sdx2
+
+mount /dev/sdx3 /mnt
+mkdir /mnt /mnt/boot
+mount /dev/sdx1 /mnt/boot
+
+pacstrap /mnt base base-devel
+pacman -Syu
+pacstrap /mnt grub-bios
+
+genfstab -p /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt /bin/bash
+
+nano /etc/locale.gen
+	uncomment en_US.UTF-8
+
+locale-gen
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+export LANG=en_US.UTF-8
+
+ls /usr/share/zoneinfo/
+rm -rf /etx/localtime
+ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
+
+hwclock --systohc --utc
+
+echo bant0 > /etc/hostname
+systemctl enable dhcpcd.service
+
+pacman -S openssh
+
+systemctl enable sshd.service
+
+passwd root
+
+useradd -m -g users -G wheel -s /bin/bash arch
+passwd arch
+
+nano /etc/sudoers
+	uncomment wheel
+
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+
+mkinitcpio -p linux
+
+exit
+exit
+
+umount /mnt/boot
+umount /mnt
+reboot
+
+login to root
+
+pacman -Sy xorg xorg-xinit
+pacman -Syyu
+
+For Xfce4: 
+pacman -Sy lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
+
+pacman -Sy xfce4 xfce4-goodies
+
+systemctl enable lightdm.service
+
+For gnome: 
+pacman -Sy gnome gnome-extra gnome-tweak-tool
+
+systemctl enable gdm.service
+
+
+pacman -Sy firefox vlc
+
+pacman -Sy virtualbox-guest-utils
+systemctl enable vboxservice.service
+
+reboot
