@@ -37,7 +37,7 @@ echo LANG=en_US.UTF-8 > /etc/locale.conf
 export LANG=en_US.UTF-8
 
 ls /usr/share/zoneinfo/
-rm -rf /etx/localtime
+rm -rf /etc/localtime
 ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
 
 hwclock --systohc --utc
@@ -76,16 +76,12 @@ pacman -Syyu
 
 For Xfce4: 
 pacman -Sy lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings
-
 pacman -Sy xfce4 xfce4-goodies
-
 systemctl enable lightdm.service
 
-For gnome: 
-pacman -Sy gnome gnome-extra gnome-tweak-tool
-
-systemctl enable gdm.service
-
+For i3:
+pacman -Sy lightdm lightdm-gtk-greeter
+pacman -S i3-wm i3lock i3status dunst dmenu
 
 pacman -Sy firefox vlc
 
